@@ -1,0 +1,138 @@
+<% layout("/layouts/boilerplate") -%>
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+    <h3>Edit your Listings</h3>
+    <form method="post" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+        <label for="title" class="form-lable">Title</label>
+        <input  name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required>
+        <div class="invalid-feedback">Please enter the title</div>
+        <div class="valid-feedback">Title is good!</div>
+        </div>
+
+        <div class="mb-3">
+        <label for="description" class="form-lable"> Description</label>
+        <textarea  name="listing[description]"  class="form-control" required><%= listing.description %></textarea>
+        <div class="invalid-feedback">Please enter a short description</div>
+        </div>
+
+        <div class="mb-3">
+            Original listing image <br>
+            <img src="<%= originalImageUrl%>" class="updating_image" >
+        </div>
+
+        <div class="mb-3">
+        <label for="image" class="form-lable">Upload New Image</label>
+        <input  name="listing[image][url]" type="file" class="form-control">
+        </div>
+
+        <div class="row"> 
+        <div class="mb-3 col-md-4">
+        <label for="price" class="form-lable">Price</label>
+        <input  name="listing[price]"  value="<%= listing.price %>"  class="form-control" required>
+        <div class="invalid-feedback">Please enter a vaild price</div>
+        </div>
+
+        <div class="mb-3 col-md-8">
+        <label for="country" class="form-lable">Country</label>
+        <input  name="listing[country]"  value="<%= listing.country %>"  type="text" class="form-control" required>
+        <div class="invalid-feedback">Please enter your country</div>
+        </div>
+         </div>
+        
+        <div class="mb-3">
+        <label for="location" class="form-lable">Location</label>
+        <input  name="listing[location]"  value="<%= listing.location%>"  type="text" class="form-control" required>
+        <div class="invalid-feedback">Please enter your location</div>
+        </div>
+        
+        <div class="mb-3">
+        <label for="category" class="form-label">Category</label><br>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="trending" id="catTrending"
+            <%= listing.category.includes("trending") ? "checked" : "" %>>
+            <label class="form-check-label" for="catTrending">Trending</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="rooms" id="catRooms"
+            <%= listing.category.includes("rooms") ? "checked" : "" %>>
+            <label class="form-check-label" for="catRooms">Rooms</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="iconicCites" id="catIconic"
+            <%= listing.category.includes("iconicCites") ? "checked" : "" %>>
+            <label class="form-check-label" for="catIconic">Iconic Cites</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="mountains" id="catMountains"
+            <%= listing.category.includes("mountains") ? "checked" : "" %>>
+            <label class="form-check-label" for="catMountains">Mountains</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="castles" id="catCastles"
+            <%= listing.category.includes("castles") ? "checked" : "" %>>
+            <label class="form-check-label" for="catCastles">Castles</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="pools" id="catPools"
+            <%= listing.category.includes("pools") ? "checked" : "" %>>
+            <label class="form-check-label" for="catPools">Pools</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="camping" id="catCamping"
+            <%= listing.category.includes("camping") ? "checked" : "" %>>
+            <label class="form-check-label" for="catCamping">Camping</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="farms" id="catFarms"
+            <%= listing.category.includes("farms") ? "checked" : "" %>>
+            <label class="form-check-label" for="catFarms">Farms</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="arctic" id="catArctic"
+            <%= listing.category.includes("arctic") ? "checked" : "" %>>
+            <label class="form-check-label" for="catArctic">Arctic</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="beach" id="catBeach"
+            <%= listing.category.includes("beach") ? "checked" : "" %>>
+            <label class="form-check-label" for="catBeach">Beach</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" 
+            name="listing[category]" value="forest" id="catForest"
+            <%= listing.category.includes("forest") ? "checked" : "" %>>
+            <label class="form-check-label" for="catForest">Forest</label>
+        </div>
+        </div>
+
+
+        <button class="btn btn-dark edit-btn mt-3">Edit</button>
+    
+    </form>
+    <br>
+    <br>
+    <br>
+</div>
+</div>
