@@ -24,8 +24,21 @@ const userRouter = require("./routes/user.js");
 const dbUrl = process.env.ATLASDB_URL;
 
 async function main() {
-    await mongoose.connect(dbUrl);
+  try {
+    await mongoose.connect(dbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      tls: true
+    });
+    console.log("✅ Connected to MongoDB");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+  }
 }
+
+main();
+
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -63,12 +76,12 @@ const sessionOptions ={
 //     res.send("Hi, I am root");
 // });
 
-main().then(()=>{
-    console.log("connect to DB")
-})
-.catch((err)=>{
-    console.log(err);
-});
+// main().then(()=>{
+//     console.log("connect to DB")
+// })
+// .catch((err)=>{
+//     console.log(err);
+// });
 
 
 app.use(session(sessionOptions));
