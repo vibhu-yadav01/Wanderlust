@@ -22,21 +22,24 @@ const userRouter = require("./routes/user.js");
 
 
 const dbUrl = process.env.ATLASDB_URL;
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"
+
 
 async function main() {
   try {
     await mongoose.connect(dbUrl, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
-      tls: true
+      useUnifiedTopology: true
+      // tls: true // not needed for mongodb+srv
     });
-    console.log("✅ Connected to MongoDB");
+    console.log("✅ Connected to Atlas MongoDB");
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
   }
 }
 
 main();
+
 
 
 
