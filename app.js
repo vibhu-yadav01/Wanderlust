@@ -26,20 +26,15 @@ const dbUrl = process.env.ATLASDB_URL;
 
 
 async function main() {
-  try {
-    await mongoose.connect(dbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-      // tls: true // not needed for mongodb+srv
-    });
-    console.log("✅ Connected to Atlas MongoDB");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-  }
+    try {
+        await mongoose.connect(dbUrl);
+        console.log("✅ Connected to MongoDB");
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 main();
-
 
 
 
@@ -50,17 +45,14 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-const store =  MongoStore.create({
-    mongoUrl: dbUrl,
-    crypto: {
-    secret: process.env.SECRET,
-    },
-    touchAfter:24 * 3600,
+const store = MongoStore.create({
+    client: mongoose.connection.getClient(),
+    touchAfter: 24 * 3600,
 });
 
-store.on("error", ()=>{{
+store.on("error", (err) => {
     console.log("ERROR in MONGO SESSION STORE", err);
-}})
+});
 
 const sessionOptions ={
     store,
