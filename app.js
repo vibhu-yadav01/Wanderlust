@@ -45,10 +45,10 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-// const store = MongoStore.create({
-//     client: mongoose.connection.getClient(),
-//     touchAfter: 24 * 3600,
-// });
+const store = MongoStore.create({
+    client: mongoose.connection.getClient(),
+    touchAfter: 24 * 3600,
+});
 
 store.on("error", (err) => {
     console.log("ERROR in MONGO SESSION STORE", err);
