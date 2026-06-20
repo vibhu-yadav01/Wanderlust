@@ -77,8 +77,13 @@ const sessionOptions ={
 // .catch((err)=>{
 //     console.log(err);
 // });
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
-
+app.get("/test", (req, res) => {
+    res.send("Server is working!");
+});
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -93,6 +98,7 @@ app.use((req, res, next)=>{
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+    console.log(req.method, req.url);
     next();
 })
 
@@ -117,9 +123,14 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    let { statusCode= 500, message= "Something went wrong"} = err;
-    res.status(statusCode).render("error.ejs", {message});
-    // res.status(statusCode).send(message);
+    console.error("======== ERROR ========");
+    console.error(err);
+    console.error(err.stack);
+
+    res.status(err.statusCode || 500).send(`
+        <h1>Error</h1>
+        <pre>${err.stack}</pre>
+    `);
 });
 
 const port = process.env.PORT || 8080;
