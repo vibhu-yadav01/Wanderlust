@@ -45,10 +45,6 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 
-store.on("error", (err) => {
-    console.log("ERROR in MONGO SESSION STORE", err);
-});
-
 const sessionOptions = {
     secret: process.env.SECRET,
     resave: false,
