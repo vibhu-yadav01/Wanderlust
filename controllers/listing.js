@@ -25,11 +25,17 @@ module.exports.index = async (req, res) => {
   }
 
   const allListings = await Listing.find(filter);
+    console.log("[TRACE] Before res.render(listings/index.ejs)");
+    console.log("[TRACE] req.user =", req.user);
+    console.log("[TRACE] res.locals =", res.locals);
     res.render("listings/index.ejs", { allListings, category,search });
     };
 
 
 module.exports.renderNewForm = (req, res)=>{
+    console.log("[TRACE] Before res.render(listings/new.ejs)");
+    console.log("[TRACE] req.user =", req.user);
+    console.log("[TRACE] res.locals =", res.locals);
     res.render("listings/new.ejs");
 };
 
@@ -41,6 +47,9 @@ module.exports.show= async(req, res)=>{
         req.flash("error", "Listing you reuested for does not exist!");
        return res.redirect("/listings"); // Added return
     }
+    console.log("[TRACE] Before res.render(listings/show.ejs)");
+    console.log("[TRACE] req.user =", req.user);
+    console.log("[TRACE] res.locals =", res.locals);
     res.render("listings/show.ejs", {listing});
 }
 
@@ -67,8 +76,9 @@ module.exports.createListing = async (req, res, next)=>{
         limit: 1
         },
         headers: {
-        "User-Agent": "YourAppName/1.0 (your-email@example.com)" // required by Nominatim
-        }
+        "User-Agent": "SigmaWanderlustProject/1.0"
+        },
+        timeout: 5000 // 5 seconds timeout
     });
     } catch (err) {
     console.error("Geocoding failed:", err.message);
@@ -108,20 +118,49 @@ module.exports.editListing = async(req, res)=>{
     }
     let originalImageUrl=listing.image.url;
     originalImageUrl= originalImageUrl.replace("/upload", "/upload/w_250");
+    console.log("[TRACE] Before res.render(listings/edit.ejs)");
+    console.log("[TRACE] req.user =", req.user);
+    console.log("[TRACE] res.locals =", res.locals);
     res.render("listings/edit.ejs", {listing, originalImageUrl});
 };
 
 module.exports.updateListing =async (req, res)=>{
     let {id} = req.params;
-    let listing = await Listing.findByIdAndUpdate
-    (id, {...req.body.listing});
+    let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing});
+
+    // Geocode the new location
+    let response;
+    try {
+        response = await axios.get("https://nominatim.openstreetmap.org/search", {
+            params: { q: req.body.listing.location, format: "json", limit: 1 },
+            headers: { "User-Agent": "SigmaWanderlustProject/1.0" },
+            timeout: 5000 // 5 seconds timeout
+        });
+    } catch (err) {
+        console.error("Geocoding failed:", err.message);
+        response = { data: [] };
+    }
+
+    if (response.data.length > 0) {
+        let data = response.data[0];
+        listing.geometry = {
+            type: "Point",
+            coordinates: [parseFloat(data.lon), parseFloat(data.lat)]
+        };
+    } else {
+        listing.geometry = {
+            type: "Point",
+            coordinates: [0, 0]
+        };
+    }
 
     if(typeof req.file !== "undefined"){
         let url = req.file.path;
         let filename = req.file.filename;
         listing.image = { url,filename };
-        await listing.save();
     }
+    
+    await listing.save();
     
 
     req.flash("success", "Listing Updated!");

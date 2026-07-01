@@ -17,11 +17,11 @@
     </div>
 
     <div class="navbar-nav ms-auto">
-      <a class="nav-link" href="/listings/new">Add your place</a>
-     <% if (!locals.currUser) { %>
+      <% if (!currUser) { %>
         <a class="nav-link signup-btn" href="/signup">Sign up</a>
         <a class="nav-link login-btn" href="/login">Log in</a>
       <% } else { %>
+        <a class="nav-link" href="/listings/new">Add your place</a>
         <a class="nav-link login-btn" href="/logout">Log out</a>
       <% } %>
     </div>

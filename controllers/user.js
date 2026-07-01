@@ -13,8 +13,14 @@ module.exports.postSignup= async(req, res,next)=>{
     if (err) {
         return next(err);
     }
+
     req.flash("success", "Welcome to Wanderlust");
-    res.redirect("/listings");
+    req.session.save((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/listings");
+    });
 });
 
     } catch(e){
@@ -29,10 +35,17 @@ module.exports.login=  (req, res)=>{
     res.render("users/login.ejs");
 };
 
-module.exports.postLogin = async(req, res)=>{
-    req.flash("success", "Welcome back to wanderlust! You are login!");
-    let redirectUrl = res.locals.redirectUrl || "/listings"
-    res.redirect(redirectUrl);
+module.exports.postLogin = async (req, res, next) => {
+    req.flash("success", "Welcome back to Wanderlust! You are login!");
+
+    let redirectUrl = res.locals.redirectUrl || "/listings";
+
+    req.session.save((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect(redirectUrl);
+    });
 };
 
 module.exports.logout =  (req, res,next)=>{
@@ -41,6 +54,9 @@ module.exports.logout =  (req, res,next)=>{
            return next(err);
         }
         req.flash("success", "you are logged out");
-        res.redirect("/listings");
-    })
+        req.session.save((err) => {
+            if (err) return next(err);
+            res.redirect("/listings");
+        });
+    });
 };
